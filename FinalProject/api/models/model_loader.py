@@ -10,4 +10,4 @@ def index():
     sandwiches.Base.metadata.create_all(engine)
     resources.Base.metadata.create_all(engine)
     users.Base.metadata.create_all(engine)
-    payment.Base.metadata.create_all(engine)
+    payment_details.Base.metadata.create_all(engine)
