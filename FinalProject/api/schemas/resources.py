@@ -20,6 +20,8 @@ class ResourceUpdate(BaseModel):
 
 class Resource(ResourceBase):
     id: int
+class AllergySum(ResourceBase):
+    allergies: str
 
     class ConfigDict:
         from_attributes = True
