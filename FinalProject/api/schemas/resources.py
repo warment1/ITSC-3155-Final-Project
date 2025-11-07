@@ -6,6 +6,7 @@ from pydantic import BaseModel
 class ResourceBase(BaseModel):
     item: str
     amount: int
+    allergies: str
 
 
 class ResourceCreate(ResourceBase):
