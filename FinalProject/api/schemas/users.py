@@ -25,7 +25,10 @@ class UserUpdate(BaseModel):
     phone_number : Optional[int] = None
 class User(UserBase):
     id: int
-    order_details: list[CCDetail] = None
+    order_details: Optional[list[OrderDetail]] = None
 
     class ConfigDict:
         from_attributes = True
+
+
+User.model_rebuild()
