@@ -22,10 +22,11 @@ class PaymentDetailUpdate(BaseModel):
 
 
 class PaymentDetail(PaymentDetailBase):
-    Card_number: int
-    Transaction_status: str
-    Payment_type: str
-    User_id: User = None
+    User_id: int
+    user: Optional[User] = None
 
     class ConfigDict:
         from_attributes = True
+
+
+PaymentDetail.model_rebuild()
