@@ -1,6 +1,8 @@
 from sqlalchemy.orm import Session
+from sqlalchemy.sql import func
 from fastapi import HTTPException, status, Response, Depends
 from ..models import orders as model
+from ..models import order_details as order
 from sqlalchemy.exc import SQLAlchemyError
 
 
@@ -40,7 +42,18 @@ def read_one(db: Session, item_id):
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=error)
     return item
 
-
+def sales_per_diem(db: Session, order_date):
+    try:
+        result = (db.query(order.OrderDetail.amount).join(order.OrderDetail).filter(func.date_trunc("day", model.Order.order_date) == func.date_trunc("day",order_date)))
+        if not result.first():
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Id not found!")
+        item = 0
+        for(amount)in result:
+            item += amount
+    except SQLAlchemyError as e:
+        error = str(e.__dict__['orig'])
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=error)
+    return item
 def update(db: Session, item_id, request):
     try:
         item = db.query(model.Order).filter(model.Order.id == item_id)
