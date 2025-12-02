@@ -4,7 +4,7 @@ from datetime import datetime
 from ..dependencies.database import Base
 
 
-class Order(Base):
+class Payment(Base):
     __tablename__ = "payment"
 
     id = Column(Integer, primary_key=True, index=True, autoincrement=True)

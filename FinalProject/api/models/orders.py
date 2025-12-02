@@ -16,3 +16,4 @@ class Order(Base):
     complete = Column(Boolean, default=False)
 
     order_details = relationship("OrderDetail", back_populates="order")
+    reviews = relationship("Review", back_populates="order")

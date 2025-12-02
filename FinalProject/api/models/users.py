@@ -13,5 +13,3 @@ class User(Base):
     email = Column(String(100))
     phone_number = Column(Integer)
     pastOrders = Column(String(300))
-
-    CC_details = relationship("CardDetail", back_populates="user")

@@ -14,4 +14,3 @@ class Sandwich(Base):
 
     recipes = relationship("Recipe", back_populates="sandwich")
     order_details = relationship("OrderDetail", back_populates="sandwich")
-    Allergies = relationship("AllergySum", back_populates="sandwich")
