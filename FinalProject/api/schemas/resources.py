@@ -16,12 +16,8 @@ class ResourceCreate(ResourceBase):
 class ResourceUpdate(BaseModel):
     item: Optional[str] = None
     amount: Optional[int] = None
-
-
+    allergies: Optional[str] = None
 class Resource(ResourceBase):
     id: int
-class AllergySum(ResourceBase):
-    allergies: str
-
     class ConfigDict:
         from_attributes = True

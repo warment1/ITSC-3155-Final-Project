@@ -44,7 +44,7 @@ def read_one(db: Session, item_id):
 
 def sales_per_diem(db: Session, order_date):
     try:
-        result = (db.query(order.OrderDetail.amount).join(order.OrderDetail).filter(func.date_trunc("day", model.Order.order_date) == func.date_trunc("day",order_date)))
+        result = (db.query(order.OrderDetail.amount).join(order.OrderDetail).filter(func.date_trunc("day", model.Order.order_date) == func.date_trunc("day", date)))
         if not result.first():
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Id not found!")
         item = 0
@@ -54,7 +54,6 @@ def sales_per_diem(db: Session, order_date):
         error = str(e.__dict__['orig'])
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=error)
     return item
-
 def update(db: Session, item_id, request):
     try:
         item = db.query(model.Order).filter(model.Order.id == item_id)
