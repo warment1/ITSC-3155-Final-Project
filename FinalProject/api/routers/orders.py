@@ -1,4 +1,5 @@
 from fastapi import APIRouter, Depends, FastAPI, status, Response
+from sqlalchemy import DATETIME
 from sqlalchemy.orm import Session
 from ..controllers import orders as controller
 from ..schemas import orders as schema
@@ -19,6 +20,9 @@ def create(request: schema.OrderCreate, db: Session = Depends(get_db)):
 def read_all(db: Session = Depends(get_db)):
     return controller.read_all(db)
 
+@router.get("/{order_date}", response_model=int)
+def sales_per_diem(order_date: DATETIME, db: Session = Depends(get_db)):
+    return controller.sales_per_diem(db, order_date=order_date)
 
 @router.get("/{item_id}", response_model=schema.Order)
 def read_one(item_id: int, db: Session = Depends(get_db)):

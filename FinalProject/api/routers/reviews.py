@@ -20,6 +20,10 @@ def read_all(db: Session = Depends(get_db)):
     return controller.read_all(db)
 
 
+@router.get("/{sandwich_id}", response_model=int)
+def read_average_rating(sandwich_id: int, db: Session = Depends(get_db)):
+    return controller.read_average_rating(db, sandwich_id=sandwich_id)
+
 @router.get("/{item_id}", response_model=schema.Review)
 def read_one(item_id: int, db: Session = Depends(get_db)):
     return controller.read_one(db, item_id=item_id)
