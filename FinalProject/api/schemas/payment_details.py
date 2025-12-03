@@ -10,15 +10,16 @@ class PaymentDetailBase(BaseModel):
     Payment_type: str
 
 
+
 class PaymentDetailCreate(PaymentDetailBase):
     User_id: int
-
+    Order_id: int
 class PaymentDetailUpdate(BaseModel):
     User_id: Optional[int] = None
     Card_number: Optional[int] = None
     Transaction_status: Optional[str] = None
     Payment_type: Optional[str] = None
-  
+    order_id: Optional[int] = None
 
 
 class PaymentDetail(PaymentDetailBase):

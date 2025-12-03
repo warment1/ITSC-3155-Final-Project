@@ -12,3 +12,4 @@ class Payment(Base):
     Transaction_status = Column(String(100))
     Payment_type = Column(String(100))
     User_id = Column(Integer, ForeignKey("users.id"))
+    Order_id = Column(Integer, ForeignKey("orders.id"))

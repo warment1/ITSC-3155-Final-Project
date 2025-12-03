@@ -19,7 +19,9 @@ def create(request: schema.OrderCreate, db: Session = Depends(get_db)):
 @router.get("/", response_model=list[schema.Order])
 def read_all(db: Session = Depends(get_db)):
     return controller.read_all(db)
-
+@router.get("/{user_id}", response_model=list[schema.Order])
+def read_all_from_user(user_id: str, db: Session = Depends(get_db)):
+    return controller.read_all_from_user(db, user_id=user_id)
 @router.get("/{order_date}", response_model=int)
 def sales_per_diem(order_date: str, db: Session = Depends(get_db)):
     return controller.sales_per_diem(db, order_date=order_date)

@@ -9,7 +9,9 @@ from sqlalchemy.exc import SQLAlchemyError
 def create(db: Session, request):
     new_item = model.Order(
         customer_id=request.customer_id,
-        description=request.description
+        description=request.description,
+        order_date=request.order_date,
+        togo=request.togo
     )
 
     try:
@@ -30,6 +32,13 @@ def read_all(db: Session):
         error = str(e.__dict__['orig'])
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=error)
     return result
+def read_all_from_user(db: Session, user_id):
+    try:
+        result = db.query(model.Order).filter(model.Order.customer_id == user_id)
+    except SQLAlchemyError as e:
+        error = str(e.__dict__['orig'])
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=error)
+    return result
 
 
 def read_one(db: Session, item_id):
@@ -44,7 +53,7 @@ def read_one(db: Session, item_id):
 
 def sales_per_diem(db: Session, order_date):
     try:
-        result = (db.query(order.OrderDetail.amount).join(order.OrderDetail).filter(func.date_trunc("day", model.Order.order_date) == func.date_trunc("day",order_date)))
+        result = (db.query(order.OrderDetail.amount).join(order.OrderDetail).filter(func.date_trunc("day", model.Order.order_date) == func.date_trunc("day", date)))
         if not result.first():
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Id not found!")
         item = 0
@@ -54,7 +63,6 @@ def sales_per_diem(db: Session, order_date):
         error = str(e.__dict__['orig'])
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=error)
     return item
-
 def update(db: Session, item_id, request):
     try:
         item = db.query(model.Order).filter(model.Order.id == item_id)
