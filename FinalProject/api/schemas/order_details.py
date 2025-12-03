@@ -19,7 +19,7 @@ class OrderDetailUpdate(BaseModel):
 
 
 class OrderDetail(OrderDetailBase):
-    id: int
+    detail_id: int
     order_id: int
     sandwich: Sandwich = None
 
