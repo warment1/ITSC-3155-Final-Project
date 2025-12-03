@@ -9,8 +9,9 @@ class User(Base):
 
     id = Column(Integer, primary_key=True, index=True, autoincrement=True)
     customer_name = Column(String(100))
-    address = Column(String(100))
+    Address = Column(String(100))
     email = Column(String(100))
     phone_number = Column(Integer)
+    pastOrders = Column(String(300))
 
 order = relationship("Order", back_populates="users")
