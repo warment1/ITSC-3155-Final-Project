@@ -4,6 +4,7 @@ from fastapi import HTTPException, status, Response, Depends
 from ..models import orders as model
 from ..models import order_details as order
 from sqlalchemy.exc import SQLAlchemyError
+from datetime import datetime
 
 
 def create(db: Session, request):
@@ -42,18 +43,42 @@ def read_one(db: Session, item_id):
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=error)
     return item
 
-def sales_per_diem(db: Session, order_date):
+
+def sales_per_diem(db: Session, order_date: str):
     try:
-        result = (db.query(order.OrderDetail.amount).join(order.OrderDetail).filter(func.date_trunc("day", model.Order.order_date) == func.date_trunc("day",order_date)))
-        if not result.first():
-            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Id not found!")
-        item = 0
-        for(amount)in result:
-            item += amount
-    except SQLAlchemyError as e:
-        error = str(e.__dict__['orig'])
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=error)
-    return item
+        from datetime import datetime
+
+        target_date = datetime.strptime(order_date, "%Y-%m-%d").date()
+
+        result = (
+            db.query(order.OrderDetail.amount)
+            .join(model.Order, order.OrderDetail.order_id == model.Order.id)
+            .filter(func.date(model.Order.order_date) == target_date)
+            .all()
+        )
+
+        if not result:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail=f"No orders found for date {order_date}"
+            )
+
+        total = sum(amount[0] for amount in result)
+
+    except ValueError:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Invalid date format. Use YYYY-MM-DD"
+        )
+    except HTTPException:
+        raise  # Re-raise HTTP exceptions
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=str(e)
+        )
+
+    return total
 
 def update(db: Session, item_id, request):
     try:
@@ -71,6 +96,16 @@ def update(db: Session, item_id, request):
 
 def delete(db: Session, item_id):
     try:
+        order_details_count = db.query(order.OrderDetail).filter(
+            order.OrderDetail.order_id == item_id
+        ).count()
+
+        if order_details_count > 0:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail=f"Cannot delete order. It has {order_details_count} order detail(s). Delete those first."
+            )
+
         item = db.query(model.Order).filter(model.Order.id == item_id)
         if not item.first():
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Id not found!")
