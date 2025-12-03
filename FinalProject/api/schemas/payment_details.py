@@ -4,24 +4,23 @@ from pydantic import BaseModel
 from .users import User
 
 
-class PaymentDetailBase(BaseModel):
+class PaymentBase(BaseModel):
     Card_number: int
     Transaction_status: str
     Payment_type: str
 
 
-class PaymentDetailCreate(PaymentDetailBase):
+class PaymentCreate(PaymentBase):
     User_id: int
 
-class PaymentDetailUpdate(BaseModel):
+class PaymentUpdate(BaseModel):
     User_id: Optional[int] = None
     Card_number: Optional[int] = None
     Transaction_status: Optional[str] = None
     Payment_type: Optional[str] = None
-  
 
 
-class PaymentDetail(PaymentDetailBase):
+class Payment(PaymentBase):
     User_id: int
     user: Optional[User] = None
 
@@ -29,4 +28,4 @@ class PaymentDetail(PaymentDetailBase):
         from_attributes = True
 
 
-PaymentDetail.model_rebuild()
+Payment.model_rebuild()
