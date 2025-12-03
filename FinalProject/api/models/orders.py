@@ -1,5 +1,3 @@
-from ctypes.wintypes import BOOLEAN
-
 from sqlalchemy import Column, ForeignKey, Integer, String, DECIMAL, DATETIME, Boolean
 from sqlalchemy.orm import relationship
 from datetime import datetime
